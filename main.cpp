@@ -28,46 +28,6 @@ registerService(const BluetoothServerSocket &bsock)
 
 }
 
-class OutboundPacket {
-public:
-	virtual void writeToSocket(BluetoothSocket *socket) = 0;
-};
-
-class ScreenPacket : public OutboundPacket {
-public:
-
-	virtual void writeToSocket(BluetoothSocket* socket)
-	{
-
-	}
-
-};
-
-using namespace vkm;
-
-class OutboundHandler : public Thread {
-	BluetoothSocket * clientInputStream;
-	vkm::Screen *screen;
-public:
-
-	OutboundHandler(BluetoothSocket *clientInputStream, vkm::Screen *screen) :
-	clientInputStream(clientInputStream), screen(screen)
-	{
-	}
-
-	void run()
-	{
-		while (true) {
-			XImage * img = screen->captureScreen();
-
-			screen->recycleScreen(img);
-		}
-	}
-
-private:
-
-};
-
 int main()
 {
 
