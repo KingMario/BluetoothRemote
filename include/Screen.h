@@ -5,64 +5,64 @@
 
 namespace vkm {
 
-class Screen {
+    class Screen {
+    public:
 
-public:
-    struct DisplayManager {
+	struct DisplayManager {
+	    Display *disp;
 
-        Display *disp;
+	    DisplayManager() {
+		disp = XOpenDisplay(NULL);
+	    }
 
-        DisplayManager() {
-             disp = XOpenDisplay(NULL);
-        }
-        ~DisplayManager() {
-            XCloseDisplay(disp);
-        }
+	    ~DisplayManager() {
+		XCloseDisplay(disp);
+	    }
+
+	};
+    private:
+
+	int w, h;
+
+	static DisplayManager dispManager;
+
+	Display *mDisp;
+
+	Screen(int width, int height, Display *disp) :
+	w(width), h(height), mDisp(disp) {
+	}
+
+    public:
+
+	static Screen getDefaultScreen();
+
+	int width() const {
+	    return w;
+	}
+
+	int height() const {
+	    return h;
+	}
+
+	Display *display() {
+	    return mDisp;
+	}
+
+	XImage *captureScreen() const {
+	    Window root = DefaultRootWindow(mDisp);
+	    XWindowAttributes gwa;
+	    XGetWindowAttributes(mDisp, root, &gwa);
+	    int width = gwa.width;
+	    int height = gwa.height;
+	    XImage *image = XGetImage(mDisp, root, 0, 0, width, height, 0x00ffffff, ZPixmap);
+	    return image;
+	}
+	
+	void recycleScreen(XImage *img) const {
+	    XDestroyImage(img);
+	}
 
     };
-private:
-
-    int w, h;
-
-    static DisplayManager dispManager;
-
-    Display *mDisp;
-
-    Screen(int width, int height, Display *disp) :
-        w(width), h(height), mDisp(disp) {
-    }
-
-public:
-
-    static Screen getDefaultScreen();
-
-    int width() const {
-        return w;
-    }
-
-    int height() const {
-        return h;
-    }
-
-    Display *display() {
-        return mDisp;
-    }
-
-    XImage *captureScreen() const {
-        Window root = DefaultRootWindow(mDisp);
-        XWindowAttributes gwa;
-        XGetWindowAttributes(mDisp, root, &gwa);
-        int width = gwa.width;
-        int height = gwa.height;
-        XImage *image = XGetImage(mDisp ,root, 0,0 , width, height, 0x00ffffff, ZPixmap);
-        return image;
-    }
-
-    void deleteCaptureScreen(XImage *img) const {
-        XDestroyImage(img);
-    }
-
-};
 
 }
 
