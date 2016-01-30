@@ -44,8 +44,8 @@ int main()
         exit(1);
     }
 	
-	for (int i = 0; i < 100; i++) {
-		XImage *img = screen.captureScreen();
+	for (int i = 0; i < 250; i++) {
+		vkm::ScreenImage *img = screen.captureScreen();
 		Frame *frame = frameEncoder.encodeFrame(img);
 		if (frame != NULL) {
 			fwrite(frame->packet->data, 1, frame->packet->size, outputFile);

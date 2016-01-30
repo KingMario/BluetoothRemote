@@ -28,6 +28,8 @@ extern "C" {
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 
+#include "Screen.h"
+
 class FFMpegEnv {
 public:
     FFMpegEnv() {
@@ -60,7 +62,7 @@ public:
 	    int scaledWidth = -1,
 	    int scaledHeight = -1
 	    );
-    Frame * encodeFrame(XImage * image);
+    Frame * encodeFrame(vkm::ScreenImage * image);
     Frame * getDelayedFrames();
     void recycleFrame(Frame * frame);
     virtual ~FrameEncoder();

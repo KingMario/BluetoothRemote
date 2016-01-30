@@ -4,7 +4,17 @@
 #include <X11/Xutil.h>
 
 namespace vkm {
-
+    
+    struct ScreenImage {
+	XImage * ximg;
+	ScreenImage(XImage *ximg) : ximg(ximg) {
+	    
+	}
+	~ScreenImage() {
+	    XDestroyImage(ximg);
+	}
+    };
+    
     class Screen {
     public:
 
@@ -48,19 +58,9 @@ namespace vkm {
 	    return mDisp;
 	}
 
-	XImage *captureScreen() const {
-	    Window root = DefaultRootWindow(mDisp);
-	    XWindowAttributes gwa;
-	    XGetWindowAttributes(mDisp, root, &gwa);
-	    int width = gwa.width;
-	    int height = gwa.height;
-	    XImage *image = XGetImage(mDisp, root, 0, 0, width, height, 0x00ffffff, ZPixmap);
-	    return image;
-	}
-	
-	void recycleScreen(XImage *img) const {
-	    XDestroyImage(img);
-	}
+	ScreenImage *captureScreen() const ;
+
+	void recycleScreen(ScreenImage *img) const; 
 
     };
 

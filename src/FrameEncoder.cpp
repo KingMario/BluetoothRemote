@@ -86,15 +86,16 @@ FrameEncoder::FrameEncoder(
 
 }
 
-Frame * FrameEncoder::encodeFrame(XImage * image)
+Frame * FrameEncoder::encodeFrame(vkm::ScreenImage * img)
 {
 	av_init_packet(&pkt);
 	pkt.data = NULL; // packet data will be allocated by the encoder
 	pkt.size = 0;
+	XImage * image = img->ximg;
 	uint8_t * inData[1] = {(uint8_t*) image->data}; // RGBA32 have one plane
 	int inLinesize[1] = {image->bytes_per_line}; // RGBA stride
 	sws_scale(ctx, inData, inLinesize, 0, inputHeight, frame->data, frame->linesize);
-	frame->pts = currentFrame++;
+	frame->pts = currentFrame++ % currentFrame;
 	int ret = avcodec_encode_video2(codecContext, &pkt, frame, &gotOutput);
 	if (ret < 0) {
 		clean();

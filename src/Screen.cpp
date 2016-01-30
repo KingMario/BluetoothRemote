@@ -14,5 +14,20 @@ vkm::Screen vkm::Screen::getDefaultScreen()  {
     return Screen(width, height, dispManager.disp);
 }
 
+vkm::ScreenImage *vkm::Screen::captureScreen() const {
+	    Window root = DefaultRootWindow(mDisp);
+	    XWindowAttributes gwa;
+	    XGetWindowAttributes(mDisp, root, &gwa);
+	    int width = gwa.width;
+	    int height = gwa.height;
+	    XImage *image = XGetImage(mDisp, root, 0, 0, width, height, 0x00ffffff, ZPixmap);
+	    ScreenImage *screenImage = new ScreenImage(image);
+	    return screenImage;
+}
+
+void vkm::Screen::recycleScreen(vkm::ScreenImage *img) const {
+	delete img;
+}
+
 //vkm::Screen::DisplayManager vkm::Screen::dispManager();
 vkm::Screen::DisplayManager vkm::Screen::dispManager;
