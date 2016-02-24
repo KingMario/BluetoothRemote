@@ -3,12 +3,14 @@
 #include <pthread.h>
 
 #include "Lockable.h"
+#include "Thread_exception.h"
 
-class Thread
-{
-
+class Thread {
+    
     pthread_t th;
     pthread_attr_t thAtt;
+    
+    void *retVal;
 
     bool _joinable;
     bool _runs;
@@ -22,17 +24,12 @@ class Thread
     static void * _start(void*);
 
 public:
-
     Thread();
     Thread(bool);
-
-    ~Thread();
-
+    virtual ~Thread();
     virtual void run() = 0;
-
     void join();
     void start();
-
     bool joinable();
 };
 

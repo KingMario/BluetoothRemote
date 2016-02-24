@@ -1,6 +1,5 @@
 #ifndef MOUSE_H
 #define MOUSE_H
-
 #include "Screen.h"
 
 namespace vkm {

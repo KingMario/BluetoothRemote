@@ -1,8 +1,8 @@
 #include "Mouse.h"
 #include <stdexcept>
-#include <suinput.h>
 #include <cstring>
 #include <X11/Xlib.h>
+#include <unistd.h>
 
 vkm::Mouse::Mouse(Screen screen) : scr(screen), uinput_fd(-1) {
     mouseCreate();
@@ -65,17 +65,15 @@ void vkm::Mouse::moveMouse(const Point &p) {
         newPoint.x - current.x,
         newPoint.y - current.y
     );
-    for(int i = 0 ; i  < 2 ; i++) {
-        struct timespec sleeptime = {0, 50000000};
+    for(int i = 0 ; i  < 1 ; i++) {
         if(suinput_emit(uinput_fd, EV_REL, REL_X, delta.x)==-1) {
             throw std::runtime_error("cannot suinput_emit");
         }
         if(suinput_emit(uinput_fd, EV_REL, REL_Y, delta.y)==-1){
             throw std::runtime_error("cannot suinput_emit");
         }
-        sync();
-        nanosleep(&sleeptime, NULL);
     }
+	sync();
 }
 
 void vkm::Mouse::leftClickMouse() {

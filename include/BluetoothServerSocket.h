@@ -11,46 +11,41 @@
 
 #include <stdexcept>
 
-namespace bluetooth
-{
+namespace bluetooth {
 
-class BluetoothServerSocket
-{
-    int fd;
-    int _port;
+    class BluetoothServerSocket {
+	int fd;
+	int _port;
 
-    void construct();
+	void construct();
 
-    BluetoothSocket * _accept();
+	BluetoothSocket * _accept();
 
-    BluetoothServerSocket(const BluetoothServerSocket &o);
+	BluetoothServerSocket(const BluetoothServerSocket &o);
 
-    BluetoothServerSocket& operator=(const BluetoothServerSocket &o);
+	BluetoothServerSocket& operator=(const BluetoothServerSocket &o);
 
-    void _listen(int backlog);
+	void _listen(int backlog);
 
-public:
-    BluetoothServerSocket(int port);
+    public:
+	BluetoothServerSocket(int port);
 
-    BluetoothServerSocket();
+	BluetoothServerSocket();
 
-    virtual ~BluetoothServerSocket();
+	virtual ~BluetoothServerSocket();
 
-    int port() const
-    {
-        return _port;
-    }
+	int port() const {
+	    return _port;
+	}
 
-    void listen(int backlog = 1)
-    {
-        _listen(backlog);
-    }
+	void listen(int backlog = 1) {
+	    _listen(backlog);
+	}
 
-    BluetoothSocket * accept()
-    {
-        return _accept();
-    }
-};
+	BluetoothSocket * accept() {
+	    return _accept();
+	}
+    };
 
 }
 

@@ -53,3 +53,4 @@ int suinput_destroy(int uinput_fd);
 
 
 #endif /* SUINPUT_H */
+
