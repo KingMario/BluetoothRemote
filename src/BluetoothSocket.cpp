@@ -45,13 +45,10 @@ int bluetooth::BluetoothSocket::read(size_t numBytes, void *dstBuf) {
         numMore-=rd;
     }
     if(rd == -1) {
-		printf("~~~~bluetooth::BluetoothSocket::read(%d, void *dstBuf) cannot read\n", numBytes);
         throw std::runtime_error("cannot read");
     } else if (rd == EOF) {
-		printf("~~~~bluetooth::BluetoothSocket::read(%d, void *dstBuf) EOF read\n", numBytes);
 		throw std::runtime_error("EOF read");
 	}
-	printf("~~~~bluetooth::BluetoothSocket::read(%d, void *dstBuf)\n", numBytes);
     return numRead;
 }
 
