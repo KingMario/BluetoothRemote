@@ -105,6 +105,7 @@ namespace srv {
 		    writePacket(frame);
 		    writeLock.unlock();
 		} catch (const std::exception &err) {
+		    writeLock.unlock();
 		    if (onWriteError != 0) onWriteError->onWriteError(err);
 		    interrupted(true);
 		    return;

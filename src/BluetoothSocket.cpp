@@ -35,7 +35,6 @@ unsigned char bluetooth::BluetoothSocket::read()
 }
 
 int bluetooth::BluetoothSocket::read(size_t numBytes, void *dstBuf) {
-	printf(">>>>bluetooth::BluetoothSocket::read(%d, void *dstBuf)\n", numBytes);
     int numRead = 0;
     int numMore = numBytes;
     int rd;

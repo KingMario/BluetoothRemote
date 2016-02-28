@@ -36,31 +36,35 @@ registerService(const BluetoothServerSocket &bsock)
 
 namespace srv {
 
-	
-
 	template<typename Socket_T> class RdClientHandler : public Thread {
 	};
 
-	template<typename Socket_T> class RdClientHandler<Socket_T*> : public Interruptable {
+	template<typename Socket_T> class RdClientHandler<Socket_T*> : public Thread {
 
 		class SharedContext {
 		public:
+
 			SharedContext(RdClientHandler *context) : context(context)
 			{
-
 			}
+			
 		protected:
 			RdClientHandler *context;
 		};
-		
+
 		class OnPacketWriterError : public PacketWriterAsync<Socket_T*>::OnWriteErrorCallback, SharedContext {
 		public:
-			OnPacketWriterError(RdClientHandler *context) : SharedContext(context) {
+
+			OnPacketWriterError(RdClientHandler *context) : SharedContext(context)
+			{
 			}
-			virtual void onWriteError(const std::exception &err) {
+
+			virtual void onWriteError(const std::exception &err)
+			{
+				Log::logMsg(err.what());
 			}
 		};
-		
+
 		friend class RdClientHandler<Socket_T*>::SharedContext;
 
 	public:
@@ -70,7 +74,7 @@ namespace srv {
 			asyncOutbound = new PacketWriterAsync<Socket_T*>(500, socket);
 			errCallback = new OnPacketWriterError(this);
 			asyncOutbound->setOnWriteErrorCallback(errCallback);
-			
+
 			asyncEventProcessor = new EventProcessorAsync;
 		}
 
@@ -83,24 +87,28 @@ namespace srv {
 
 		virtual void run()
 		{
+			Log::logMsg("RdClientHandler::run()");
+
 			try {
 				initiateConnection();
 			} catch (const std::exception &err) {
 				Log::logMsg("RdClientHandler::run() initiateConnection() error");
+				Log::logMsg("~RdClientHandler::run()");
 				return;
 			}
-			
+
 			startAsyncWorkers();
-			
+
 			try {
 				dataTransfer();
 			} catch (const std::exception &err) {
-				Log::logMsg("RdClientHandler::run() dataTransfer() error");
 				shudownAsyncWorkers();
+				Log::logMsg("~RdClientHandler::run()");
 				return;
 			}
 			
 			shudownAsyncWorkers();
+			Log::logMsg("~RdClientHandler::run()");
 		}
 
 	private:
@@ -113,28 +121,28 @@ namespace srv {
 		void shudownAsyncWorkers()
 		{
 			Log::logMsg("RdClientHandler::shudownAsyncWorkers()");
-			
-			
+
 			asyncOutbound->interrupted(true);
 			asyncOutbound->join();
 			Log::logMsg("RdClientHandler::shudownAsyncWorkers() asyncOutbound->join()");
-			
+
 			asyncEventProcessor->shutdown();
 			asyncEventProcessor->join();
 			Log::logMsg("RdClientHandler::shudownAsyncWorkers() asyncEventProcessor->join()");
-			
+
 			Log::logMsg("~RdClientHandler::shudownAsyncWorkers()");
 		}
-		
-		void startAsyncWorkers(){
+
+		void startAsyncWorkers()
+		{
 			asyncOutbound->start();
 			asyncEventProcessor->start();
 		}
-		
+
 		void dataTransfer()
 		{
 			Log::logMsg("RdClientHandler::dataTransfer()");
-			while (!interrupted()) {
+			while (true) {
 				Log::logMsg("~RdClientHandler::dataTransfer() readInboundPacket()");
 				readInboundPacket();
 			}
@@ -206,12 +214,16 @@ int main()
 	Log::logMsg("::main() server.listen()");
 
 	Log::logMsg("::main() while(true)");
+
 	while (true) {
 		BluetoothSocket *socket = server.accept();
 		Log::logMsg("::main() server.accept()");
 		srv::RdClientHandler<BluetoothSocket*> clientHandler(socket);
 		clientHandler.start();
+		Log::logMsg("::main() clientHandler.join()");
 		clientHandler.join();
+		Log::logMsg("::main() delete socket");
 		delete socket;
 	}
+
 }
