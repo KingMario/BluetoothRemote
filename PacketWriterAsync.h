@@ -4,14 +4,50 @@
 #include "Packet.h"
 #include "BluetoothSocket.h"
 #include "Screen.h"
+#include "Log.h"
+#include <pthread.h>
+
+#include <cairo.h>
+#include <cairo-xlib.h>
+#include <X11/Xlib.h>
+#include <stdexcept>
 
 namespace srv {
 
     template<typename Socket_T>
-    void writeScreenFramePngCairo(ScreenFramePacket *pkt, Socket_T *socket);
+    cairo_status_t writeScreenCallback(void * closure, const unsigned char *data, unsigned int length) {
+	Socket_T * socket = (Socket_T*) closure;
+	try {
+	    socket->write(length, data);
+	} catch (const std::runtime_error &err) {
+	    return CAIRO_STATUS_WRITE_ERROR;
+	}
+	return CAIRO_STATUS_SUCCESS;
+    }
 
     template<typename Socket_T>
-    class PacketWriterAsync : Consumer<srv::Packet*> {
+    void writeScreenFramePngCairo(ScreenFramePacket *pkt, Socket_T *socket) {
+	char type = pkt->type();
+	socket->write(1, &type);
+	
+	vkm::Screen screen = vkm::Screen::getDefaultScreen();
+	Display *disp = screen.display();
+	int scr = DefaultScreen(disp);
+	Window root = DefaultRootWindow(disp);
+	cairo_surface_t *surface = cairo_xlib_surface_create(
+		disp, root, DefaultVisual(disp, scr),
+		DisplayWidth(disp, scr),
+		DisplayHeight(disp, scr));
+	int res = cairo_surface_write_to_png_stream(surface, writeScreenCallback<Socket_T>, socket);
+
+	if (res == CAIRO_STATUS_WRITE_ERROR) {
+	    throw std::runtime_error("cannot write current frame");
+	}
+	cairo_surface_destroy(surface);
+    }
+
+    template<typename Socket_T>
+    class PacketWriterAsync : Consumer<srv::OutboundPacket*> {
     };
 
     template<typename Socket_T>
@@ -25,7 +61,7 @@ namespace srv {
 
 	class OnWriteErrorCallback {
 	public:
-	    void onWriteError(const std::exception &err);
+	    virtual void onWriteError(const std::exception &err) = 0;
 
 	    virtual ~OnWriteErrorCallback() {
 	    }
@@ -36,6 +72,7 @@ namespace srv {
 	}
 
 	virtual void proccess(srv::OutboundPacket*& item) {
+//	    Log::logMsg("PacketWriterAsync::proccess(srv::OutboundPacket*& item)");
 	    try {
 		writePacket(item);
 	    } catch (const std::exception &err) {
@@ -46,6 +83,7 @@ namespace srv {
     private:
 
 	void writePacket(OutboundPacket *pkt) {
+//	    Log::logMsg("PacketWriterAsync::writePacket(OutboundPacket *pkt)");
 	    switch (pkt->type()) {
 		case Packet::SCREE_FRAME:
 		    writeScreenFrame(dynamic_cast<ScreenFramePacket*> (pkt));
@@ -58,11 +96,13 @@ namespace srv {
     private:
 
 	void writeScreenFrame(ScreenFramePacket *pkt) {
+//	    Log::logMsg("PacketWriterAsync::writeScreenFrame(ScreenFramePacket *pkt)");
 	    writeScreenFramePngCairo(pkt, socket);
 	}
 
 	void writeAck(OutbountAckPacket *pkt) {
-	    socket->write(1, &pkt->type());
+	    char type = pkt->type();
+	    socket->write(1, &type);
 	}
 
     private:

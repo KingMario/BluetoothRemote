@@ -44,7 +44,6 @@ public:
                 proccess(item);
                 proccesing.pop();
             }
-
         }
     }
 

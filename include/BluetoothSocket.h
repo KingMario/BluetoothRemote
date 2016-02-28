@@ -22,7 +22,7 @@ public:
     int read(size_t numBytes, void *dstBuf);
 
     int write(size_t numBytes, const void *srcBuf);
-
+   
     virtual ~BluetoothSocket();
 
 protected:

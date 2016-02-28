@@ -61,7 +61,7 @@ void * Thread::_start(void*o)
 {
 	Thread * t = (Thread*)o;
 	t->run();
-	t->_runs =false;
+	t->_runs = false;
 	pthread_exit(0);
 }
 
