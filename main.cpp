@@ -61,7 +61,7 @@ namespace srv {
 
 			virtual void onWriteError(const std::exception &err)
 			{
-				Log::logMsg(err.what());
+				Log::logMsg("virtual void onWriteError("+std::string(err.what())+")");
 			}
 		};
 

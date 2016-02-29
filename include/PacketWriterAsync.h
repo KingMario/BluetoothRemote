@@ -10,6 +10,9 @@
 #include <cairo-xlib.h>
 #include <X11/Xlib.h>
 #include <stdexcept>
+#include <errno.h>
+
+static long long screenRefreshInterval = 0;
 
 namespace srv {
 
@@ -98,7 +101,8 @@ namespace srv {
 	virtual void run() {
 	    Log::logMsg("PacketWriterAsync::proccess(srv::OutboundPacket*& item)");
 	    while (!interrupted()) {
-		usleep(1000 * interval);
+		clock_gettime(CLOCK_REALTIME , &startTime);
+		
 		try {
 		    ScreenFramePacket * frame = new ScreenFramePacket;
 		    writeLock.lock();
@@ -110,6 +114,22 @@ namespace srv {
 		    interrupted(true);
 		    return;
 		}
+		
+//		int res;
+//		if((res=clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &timerRequest, NULL))!=0) {
+//		    if(res == EINTR) {
+//			Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item) clock_nanosleep interrupted");
+//		    } else {
+//			Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item) clock_nanosleep error");
+//			return;
+//		    }
+//		}
+		
+		clock_gettime(CLOCK_REALTIME, &endTime);
+		int secElapsed = endTime.tv_sec-startTime.tv_sec;
+		int millisElapsed = (endTime.tv_nsec-endTime.tv_nsec);
+		sprintf(printBuffer, "%d.%d", secElapsed, millisElapsed);
+		Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item) current iteration took: "+std::string(printBuffer));
 	    }
 	    Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item)");
 	}
@@ -143,6 +163,11 @@ namespace srv {
 	Socket_T *socket;
 	Lockable writeLock;
 	OnWriteErrorCallback *onWriteError;
+	
+	timespec timerRequest;
+	timespec startTime, endTime; 
+	
+	char printBuffer[2048];
     };
 }
 #endif /* PACKETWRITERASYNC_H */
