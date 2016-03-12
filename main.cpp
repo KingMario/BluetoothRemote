@@ -13,6 +13,7 @@
 #include "suinput.h"
 #include "Mouse.h"
 #include "Thread.h"
+#include "Keyboard.h"
 
 using namespace std;
 using namespace bluetooth;
@@ -141,10 +142,12 @@ namespace srv {
 
 		void dataTransfer()
 		{
+			static vkm::Keyboard keyboard;
 			Log::logMsg("RdClientHandler::dataTransfer()");
 			while (true) {
 				Log::logMsg("~RdClientHandler::dataTransfer() readInboundPacket()");
 				readInboundPacket();
+				keyboard.pressBtn(KEY_H);
 			}
 			Log::logMsg("~RdClientHandler::dataTransfer()");
 		}
@@ -225,5 +228,5 @@ int main()
 		Log::logMsg("::main() delete socket");
 		delete socket;
 	}
-
+	
 }

@@ -3,6 +3,7 @@
 #include "Consumer.h"
 #include "Packet.h"
 #include "Mouse.h"
+#include "Keyboard.h"
 
 namespace srv {
 

@@ -1,10 +1,11 @@
 #include "BluetoothSocket.h"
-
+#include <iostream>
 #include <stdexcept>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <errno.h>
 #include <cstdio>
+#include <bluetooth/bluetooth.h>
 
 bluetooth::BluetoothSocket::
 BluetoothSocket(BluetoothAddress addr) : addr(addr),  fd(-1)
@@ -35,19 +36,24 @@ unsigned char bluetooth::BluetoothSocket::read()
 }
 
 int bluetooth::BluetoothSocket::read(size_t numBytes, void *dstBuf) {
+	timeval readtimeout;
+	readtimeout.tv_sec = 1;
+	readtimeout.tv_usec = 0;
+	setsockopt(fd, SOL_BLUETOOTH, SO_RCVTIMEO, &readtimeout, sizeof(timeval));
+	
     int numRead = 0;
     int numMore = numBytes;
     int rd;
     unsigned char * buf = (unsigned char*)dstBuf;
+	
     while((rd=::read(fd, &buf[numRead], numMore)) > 0) {
         numRead+=rd;
         numMore-=rd;
     }
     if(rd == -1) {
+		perror("read.");
         throw std::runtime_error("cannot read");
-    } else if (rd == EOF) {
-		throw std::runtime_error("EOF read");
-	}
+    }
     return numRead;
 }
 

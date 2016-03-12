@@ -11,6 +11,7 @@
 #include <X11/Xlib.h>
 #include <stdexcept>
 #include <errno.h>
+#include <sstream>
 
 static long long screenRefreshInterval = 0;
 
@@ -83,7 +84,8 @@ namespace srv {
 
 	PacketWriterAsync(unsigned int interval, Socket_T *socket) :
 	interval(interval), socket(socket), onWriteError(0) {
-
+	    timerRequest.tv_sec = interval/1000;
+	    timerRequest.tv_nsec = 1000000*(interval%1000);
 	}
 
 	class OnWriteErrorCallback {
@@ -101,12 +103,12 @@ namespace srv {
 	virtual void run() {
 	    Log::logMsg("PacketWriterAsync::proccess(srv::OutboundPacket*& item)");
 	    while (!interrupted()) {
-		clock_gettime(CLOCK_REALTIME , &startTime);
-		
 		try {
 		    ScreenFramePacket * frame = new ScreenFramePacket;
 		    writeLock.lock();
+		    Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item) start write");
 		    writePacket(frame);
+		    Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item) end write");
 		    writeLock.unlock();
 		} catch (const std::exception &err) {
 		    writeLock.unlock();
@@ -114,22 +116,10 @@ namespace srv {
 		    interrupted(true);
 		    return;
 		}
-		
-//		int res;
-//		if((res=clock_nanosleep(CLOCK_REALTIME, TIMER_ABSTIME, &timerRequest, NULL))!=0) {
-//		    if(res == EINTR) {
-//			Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item) clock_nanosleep interrupted");
-//		    } else {
-//			Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item) clock_nanosleep error");
-//			return;
-//		    }
-//		}
-		
-		clock_gettime(CLOCK_REALTIME, &endTime);
-		int secElapsed = endTime.tv_sec-startTime.tv_sec;
-		int millisElapsed = (endTime.tv_nsec-endTime.tv_nsec);
-		sprintf(printBuffer, "%d.%d", secElapsed, millisElapsed);
-		Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item) current iteration took: "+std::string(printBuffer));
+		std::ostringstream sstr;
+		sstr << "Sleep " << timerRequest.tv_sec << " " << timerRequest.tv_nsec;
+		Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item) "+sstr.str());
+		nanosleep(&timerRequest, NULL);
 	    }
 	    Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item)");
 	}
@@ -165,7 +155,6 @@ namespace srv {
 	OnWriteErrorCallback *onWriteError;
 	
 	timespec timerRequest;
-	timespec startTime, endTime; 
 	
 	char printBuffer[2048];
     };
