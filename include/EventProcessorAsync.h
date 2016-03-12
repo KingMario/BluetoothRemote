@@ -15,14 +15,13 @@ namespace srv {
     private:
 
 	vkm::Mouse mouse;
+	vkm::Keyboard keyboard;
 
 	void process(MouseEventPacket *pkt);
 
 	void process(KeyboardEventPacket *pkt);
 
-	void process(SingleKeyKeyboardEvent* pkt) {
-	    throw std::runtime_error("not supported operation");
-	}
+	void process(SingleKeyKeyboardEvent* pkt);
 
 	void process(StringKeyKeyboardEvent* pkt) {
 	    throw std::runtime_error("not supported operation");

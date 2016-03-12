@@ -103,6 +103,7 @@ namespace srv {
 			try {
 				dataTransfer();
 			} catch (const std::exception &err) {
+				Log::logMsg(err.what());
 				shudownAsyncWorkers();
 				Log::logMsg("~RdClientHandler::run()");
 				return;
@@ -142,12 +143,10 @@ namespace srv {
 
 		void dataTransfer()
 		{
-			static vkm::Keyboard keyboard;
 			Log::logMsg("RdClientHandler::dataTransfer()");
 			while (true) {
 				Log::logMsg("~RdClientHandler::dataTransfer() readInboundPacket()");
 				readInboundPacket();
-				keyboard.pressBtn(KEY_H);
 			}
 			Log::logMsg("~RdClientHandler::dataTransfer()");
 		}
@@ -159,16 +158,19 @@ namespace srv {
 
 			switch (packetType) {
 			case Packet::MOUSE_EVENT:
-				processMouseEvent();
+				readMouseEvent();
 				break;
 			case Packet::REQUEST_SCREEN_REFRESH:
+				break;
+			case Packet::KEYBOARD_EVENT:
+				readKeyboardEvent();
 				break;
 			default: throw std::runtime_error("not expected packet type");
 			}
 			Log::logMsg("~RdClientHandler::readInboundPacket()");
 		}
 
-		void processMouseEvent()
+		void readMouseEvent()
 		{
 			Log::logMsg("RdClientHandler::processMouseEvent()");
 			double x;
@@ -179,6 +181,29 @@ namespace srv {
 			socket->read(1, &button);
 			MouseEventPacket *mousePkt = new MouseEventPacket(x, y, (MouseEventPacket::MouseEventType)button);
 			asyncEventProcessor->add(mousePkt);
+		}
+		
+		void readKeyboardEvent() {
+			Log::logMsg("RdClientHandler::processKeyboardEvent()");
+			unsigned char keyboardEventType = 0;
+			socket->read(sizeof(unsigned char), &keyboardEventType);
+			switch(keyboardEventType) {
+			case KeyboardEventPacket::SINGLE_KEY: {
+					unsigned char keyCode = 0;
+					socket->read(sizeof(unsigned char), &keyCode);
+					SingleKeyKeyboardEvent * keyboardEvent = new SingleKeyKeyboardEvent(keyCode);
+					asyncEventProcessor->add(keyboardEvent);
+				}
+				break;
+			case KeyboardEventPacket::COMBINATION_KEY:
+				
+				break;
+			case KeyboardEventPacket::STRING_KEY:
+				
+				break;
+			default:
+				throw std::runtime_error("not valid KeyboardEventPacket");
+			}
 		}
 
 		void initiateConnection()

@@ -50,12 +50,20 @@ void srv::EventProcessorAsync::process(KeyboardEventPacket *pkt)
 	switch (pkt->keyboardEventType()) {
 	case KeyboardEventPacket::SINGLE_KEY:
 		process(dynamic_cast<SingleKeyKeyboardEvent*> (pkt));
+		Log::logMsg("EventProcessorAsync::process(KeyboardEventPacket *pkt) SINGLE_KEY");
 		break;
 	case KeyboardEventPacket::STRING_KEY:
 		process(dynamic_cast<StringKeyKeyboardEvent*> (pkt));
+		Log::logMsg("EventProcessorAsync::process(KeyboardEventPacket *pkt) STRING_KEY");
 		break;
 	case KeyboardEventPacket::COMBINATION_KEY:
 		process(dynamic_cast<CombinationKeyEvent*> (pkt));
+		Log::logMsg("EventProcessorAsync::process(KeyboardEventPacket *pkt) COMBINATION_KEY");
 		break;
 	}
+}
+
+void srv::EventProcessorAsync::process(SingleKeyKeyboardEvent* pkt) {
+	Log::logMsg("EventProcessorAsync::process(SingleKeyKeyboardEvent* pkt)");
+	keyboard.pressBtn(pkt->key());
 }

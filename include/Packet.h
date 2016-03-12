@@ -37,8 +37,9 @@ namespace srv {
 
 	enum KeyboardEventType {
 	    SINGLE_KEY = 1,
-	    STRING_KEY = 2,
-	    COMBINATION_KEY = 3
+	    COMBINATION_KEY = 2,
+	    STRING_KEY = 3,
+	    
 	};
 
 	virtual Packet::PacketType type() {
@@ -52,18 +53,18 @@ namespace srv {
 	SingleKeyKeyboardEvent() : keyCode(-1) {
 	}
 
-	SingleKeyKeyboardEvent(int key) : keyCode(key) {
+	SingleKeyKeyboardEvent(unsigned short key) : keyCode(key) {
 	}
 
 	virtual KeyboardEventPacket::KeyboardEventType keyboardEventType() {
 	    return KeyboardEventPacket::SINGLE_KEY;
 	}
 
-	int key() const {
+	unsigned short key() const {
 	    return keyCode;
 	}
     private:
-	unsigned int keyCode;
+	unsigned short keyCode;
     };
 
     struct StringKeyKeyboardEvent : KeyboardEventPacket {
