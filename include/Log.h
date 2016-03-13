@@ -1,5 +1,6 @@
 #ifndef LOG_H
 #define LOG_H
+#include "Lockable.h"
 
 class Log : Lockable {
 	std::ostream &out;

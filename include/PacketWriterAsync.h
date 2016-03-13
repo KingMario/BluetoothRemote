@@ -1,10 +1,11 @@
 #ifndef PACKETWRITERASYNC_H
 #define PACKETWRITERASYNC_H
-#include "Consumer.h"
 #include "BluetoothSocket.h"
 #include "Screen.h"
+#include "Interruptable.h"
 #include "Log.h"
 #include "Packet.h"
+#include "OnErrorCallback.h"
 
 #include <cairo.h>
 #include <cairo-xlib.h>
@@ -13,34 +14,8 @@
 #include <errno.h>
 #include <sstream>
 
-static long long screenRefreshInterval = 0;
 
 namespace srv {
-
-    class Interruptable : public Thread, Lockable {
-    public:
-
-	Interruptable() : _interrupted(false) {
-
-	}
-
-	void interrupted(bool interrupted) {
-	    Log::logMsg("Interruptable::interrupted(" + std::string((interrupted ? "true" : "false")) + ")");
-	    lock();
-	    _interrupted = interrupted;
-	    unlock();
-	}
-    private:
-	bool _interrupted;
-    protected:
-
-	bool interrupted() {
-	    lock();
-	    bool interrupted = _interrupted;
-	    unlock();
-	    return interrupted;
-	}
-    };
 
     template<typename Socket_T>
     cairo_status_t writeScreenCallback(void * closure, const unsigned char *data, unsigned int length) {
@@ -77,29 +52,22 @@ namespace srv {
     template<typename Socket_T>
     class PacketWriterAsync : public Interruptable {
     };
-
+    
     template<typename Socket_T>
     class PacketWriterAsync<Socket_T*> : public Interruptable {
     public:
 
-	PacketWriterAsync(unsigned int interval, Socket_T *socket) :
-	interval(interval), socket(socket), onWriteError(0) {
+	PacketWriterAsync(unsigned int interval, Socket_T *socket, Lockable &writeLock) :
+	    interval(interval), socket(socket), writeLock(writeLock), onErrorListener(0) {
+		
 	    timerRequest.tv_sec = interval/1000;
 	    timerRequest.tv_nsec = 1000000*(interval%1000);
 	}
-
-	class OnWriteErrorCallback {
-	public:
-	    virtual void onWriteError(const std::exception &err) = 0;
-
-	    virtual ~OnWriteErrorCallback() {
-	    }
-	};
-
-	void setOnWriteErrorCallback(OnWriteErrorCallback *callback) {
-	    onWriteError = callback;
+	
+	void setOnErrorListener(OnErrorCallback *onErrorListener) {
+	    this->onErrorListener = onErrorListener;
 	}
-
+	    
 	virtual void run() {
 	    Log::logMsg("PacketWriterAsync::proccess(srv::OutboundPacket*& item)");
 	    while (!interrupted()) {
@@ -110,11 +78,19 @@ namespace srv {
 		    writePacket(frame);
 		    Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item) end write");
 		    writeLock.unlock();
-		} catch (const std::exception &err) {
+		} catch (const Thread_exception &thrdErr) {
+		    Log::logMsg("AsyncPacketReader::run() error "+std::string(thrdErr.message()));
+		    handleError();
+		    break;
+		}  catch (const std::exception &err) {
+		    Log::logMsg("AsyncPacketReader::run() error "+std::string(err.what()));
 		    writeLock.unlock();
-		    if (onWriteError != 0) onWriteError->onWriteError(err);
-		    interrupted(true);
-		    return;
+		    handleError();
+		    break;
+		} catch (...) {
+		    Log::logMsg("AsyncPacketReader::run() unknown error ");
+		    handleError();
+		    break;
 		}
 		std::ostringstream sstr;
 		sstr << "Sleep " << timerRequest.tv_sec << " " << timerRequest.tv_nsec;
@@ -125,7 +101,14 @@ namespace srv {
 	}
 
     private:
-
+	
+	void handleError() {
+	    interrupted(true);
+	    if(onErrorListener != 0) {
+		onErrorListener->onError();
+	    }
+	}
+	
 	void writePacket(OutboundPacket *pkt) {
 	    switch (pkt->type()) {
 		case Packet::SCREE_FRAME:
@@ -137,8 +120,6 @@ namespace srv {
 	    }
 	}
 	
-    private:
-
 	void writeScreenFrame(ScreenFramePacket *pkt) {
 	    writeScreenFramePngCairo(pkt, socket);
 	}
@@ -148,15 +129,16 @@ namespace srv {
 	    socket->write(1, &type);
 	}
 
-    private:
 	unsigned int interval;
 	Socket_T *socket;
-	Lockable writeLock;
-	OnWriteErrorCallback *onWriteError;
+	Lockable &writeLock;
 	
 	timespec timerRequest;
 	
 	char printBuffer[2048];
+	
+	OnErrorCallback *onErrorListener;
+	
     };
 }
 #endif /* PACKETWRITERASYNC_H */
