@@ -5,7 +5,8 @@
 #include <stdexcept>
 #include <errno.h>
 
-void vkm::Keyboard::init(){
+void vkm::Keyboard::init()
+{
 	userDev = (struct uinput_user_dev*) malloc(sizeof(struct uinput_user_dev));
 	memset(userDev, 0, sizeof(struct uinput_user_dev));
 	strcpy(userDev->name, "vkm-keyboard");
@@ -16,11 +17,11 @@ void vkm::Keyboard::init(){
 	}
 	int evNum = 54;
 	for (int i = 0; i < evNum; i++) {
-		if(suinput_enable_event(uinputFd, EV_KEY, KEYBOARD_EVENTS[i])==-1) {
+		if (suinput_enable_event(uinputFd, EV_KEY, KEYBOARD_EVENTS[i]) == -1) {
 			throw std::runtime_error("cannot suinput_enable_event");
 		}
 	}
-	if(suinput_create(uinputFd, userDev) == -1) {
+	if (suinput_create(uinputFd, userDev) == -1) {
 		throw std::runtime_error("cannot suinput_create");
 	}
 }
@@ -30,11 +31,12 @@ vkm::Keyboard::Keyboard()
 	init();
 }
 
-void vkm::Keyboard::pressBtn(unsigned short button) {
-	if(suinput_emit_click(uinputFd, button) == -1) {
+void vkm::Keyboard::pressBtn(unsigned short button)
+{
+	if (suinput_emit_click(uinputFd, button) == -1) {
 		throw std::runtime_error("cannot suinput_emit_click");
 	}
-	if(suinput_syn(uinputFd) == -1) {
+	if (suinput_syn(uinputFd) == -1) {
 		throw std::runtime_error("cannot suinput_syn");
 	}
 }

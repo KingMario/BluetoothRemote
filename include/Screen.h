@@ -4,17 +4,19 @@
 #include <X11/Xutil.h>
 
 namespace vkm {
-    
+
     struct ScreenImage {
 	XImage * ximg;
+
 	ScreenImage(XImage *ximg) : ximg(ximg) {
-	    
+
 	}
+
 	~ScreenImage() {
 	    XDestroyImage(ximg);
 	}
     };
-    
+
     class Screen {
     public:
 
@@ -58,9 +60,9 @@ namespace vkm {
 	    return mDisp;
 	}
 
-	ScreenImage *captureScreen() const ;
+	ScreenImage *captureScreen() const;
 
-	void recycleScreen(ScreenImage *img) const; 
+	void recycleScreen(ScreenImage *img) const;
 
     };
 

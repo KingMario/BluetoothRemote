@@ -6,10 +6,9 @@
 #include "Thread_exception.h"
 
 class Thread {
-    
     pthread_t th;
     pthread_attr_t thAtt;
-    
+
     void *retVal;
 
     bool _joinable;

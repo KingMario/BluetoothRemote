@@ -2,7 +2,6 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <iostream>
-using namespace std;
 
 void bluetooth::BluetoothServerSocket::construct()
 {
@@ -12,9 +11,8 @@ void bluetooth::BluetoothServerSocket::construct()
 	}
 	sockaddr_rc loc_addr;
 	loc_addr.rc_family = AF_BLUETOOTH;
-	loc_addr.rc_bdaddr = {
-		{0, 0, 0, 0, 0, 0}
-	};
+	memset(&loc_addr.rc_bdaddr, 0, sizeof(loc_addr.rc_bdaddr));
+	
 	int res;
 	if (_port == -1) {
 		for (int i = 1; i <= 30; i++) {

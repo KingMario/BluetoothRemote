@@ -39,7 +39,7 @@ namespace srv {
 	    SINGLE_KEY = 1,
 	    COMBINATION_KEY = 2,
 	    STRING_KEY = 3,
-	    
+
 	};
 
 	virtual Packet::PacketType type() {

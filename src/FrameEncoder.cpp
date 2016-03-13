@@ -1,16 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/* 
- * File:   FrameEncoder.cpp
- * Author: nikola
- * 
- * Created on January 29, 2016, 8:20 PM
- */
-
 #include "FrameEncoder.h"
 #include "Screen.h"
 #include <stdexcept>
@@ -21,11 +8,14 @@ FrameEncoder::FrameEncoder(
 		int inputHeight,
 		int bitRate,
 		int scaledWidth,
-	    int scaledHeight
+		int scaledHeight
 		) :
-		gotOutput(0), currentFrame(0), 
-		inputWidth(inputWidth), inputHeight(inputHeight),
-		scaledWidth(scaledWidth), scaledHeight(scaledHeight)
+gotOutput(0),
+currentFrame(0),
+inputWidth(inputWidth),
+inputHeight(inputHeight),
+scaledWidth(scaledWidth),
+scaledHeight(scaledHeight)
 {
 	codec = avcodec_find_encoder(codec_id);
 	if (codec == NULL) {
@@ -38,10 +28,10 @@ FrameEncoder::FrameEncoder(
 	}
 	int destWidth = inputWidth;
 	int destHeight = inputHeight;
-	if(scaledWidth != -1) {
+	if (scaledWidth != -1) {
 		destWidth = scaledWidth;
 	}
-	if(scaledHeight != -1) {
+	if (scaledHeight != -1) {
 		destHeight = scaledHeight;
 	}
 	codecContext->bit_rate = bitRate;
@@ -101,7 +91,7 @@ Frame * FrameEncoder::encodeFrame(vkm::ScreenImage * img)
 		clean();
 		throw std::runtime_error("Error encoding frame\n");
 	}
-	if(gotOutput) {
+	if (gotOutput) {
 		Frame *frm = new Frame;
 		frm->packet = &pkt;
 		return frm;
@@ -109,14 +99,15 @@ Frame * FrameEncoder::encodeFrame(vkm::ScreenImage * img)
 	return NULL;
 }
 
-Frame * FrameEncoder::getDelayedFrames() {
-	if(gotOutput) {
+Frame * FrameEncoder::getDelayedFrames()
+{
+	if (gotOutput) {
 		int ret = avcodec_encode_video2(codecContext, &pkt, NULL, &gotOutput);
-		if(ret < 0) {
+		if (ret < 0) {
 			clean();
 			throw std::runtime_error("Error encoding frame\n");
 		}
-		if(gotOutput) {
+		if (gotOutput) {
 			Frame *frm = new Frame;
 			frm->packet = &pkt;
 			return frm;
@@ -125,11 +116,11 @@ Frame * FrameEncoder::getDelayedFrames() {
 	return NULL;
 }
 
-void FrameEncoder::recycleFrame(Frame * frame) {
+void FrameEncoder::recycleFrame(Frame * frame)
+{
 	av_free_packet(frame->packet);
 	delete frame;
 }
-
 
 FrameEncoder::FrameEncoder(const FrameEncoder& orig)
 {

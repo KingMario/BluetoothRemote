@@ -18,17 +18,17 @@ retVal(0), _joinable(joinable), _runs(false)
 
 Thread::~Thread()
 {
-	if(pthread_attr_destroy(&thAtt)!=0) {
+	if (pthread_attr_destroy(&thAtt) != 0) {
 		throw Thread_exception("cannot destroy thread.");
 	}
 }
 
 void Thread::init()
 {
-	if(pthread_attr_init(&thAtt) != 0) {
+	if (pthread_attr_init(&thAtt) != 0) {
 		throw Thread_exception("cannot init thread attributes");
 	}
-	if(pthread_attr_setdetachstate(&thAtt,
+	if (pthread_attr_setdetachstate(&thAtt,
 			(_joinable ? PTHREAD_CREATE_JOINABLE : PTHREAD_CREATE_DETACHED))) {
 		throw Thread_exception("cannot set thread attribute.");
 	}
@@ -49,7 +49,7 @@ void Thread::join()
 {
 	runsLock.lock();
 	if (_runs) {
-		if(pthread_join(th, &retVal) != 0) {
+		if (pthread_join(th, &retVal) != 0) {
 			runsLock.unlock();
 			throw Thread_exception("cannot join thread.");
 		}
@@ -59,7 +59,7 @@ void Thread::join()
 
 void * Thread::_start(void*o)
 {
-	Thread * t = (Thread*)o;
+	Thread * t = (Thread*) o;
 	t->run();
 	t->_runs = false;
 	pthread_exit(0);

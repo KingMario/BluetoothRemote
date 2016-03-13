@@ -4,52 +4,54 @@
 
 namespace vkm {
 
-struct Point {
-    int x;
-    int y;
-    Point(int x, int y) :
-        x(x), y(y) {
-    }
-    Point(){}
-};
+    struct Point {
+	int x;
+	int y;
 
-class Mouse {
+	Point(int x, int y) :
+	x(x), y(y) {
+	}
 
-    Mouse(const Mouse &);
+	Point() {
+	}
+    };
 
-    Mouse operator=(const Mouse &);
+    class Mouse {
+	Mouse(const Mouse &);
 
-    void mouseCreate();
+	Mouse operator=(const Mouse &);
 
-    void mouseDestroy();
+	void mouseCreate();
 
-    void moveMouse(const Point &p);
+	void mouseDestroy();
 
-    void leftClickMouse();
+	void moveMouse(const Point &p);
 
-    void rightClickMouse();
+	void leftClickMouse();
 
-    void sync();
+	void rightClickMouse();
 
-    Screen scr;
+	void sync();
 
-    int uinput_fd;
+	Screen scr;
 
-public:
-    Mouse(Screen screen);
+	int uinput_fd;
 
-    Mouse();
+    public:
+	Mouse(Screen screen);
 
-    ~Mouse();
+	Mouse();
 
-    void moveTo(const Point &p);
+	~Mouse();
 
-    void clickRight();
+	void moveTo(const Point &p);
 
-    void clickLeft();
+	void clickRight();
 
-    Point queryMousePosition();
-};
+	void clickLeft();
+
+	Point queryMousePosition();
+    };
 
 }
 

@@ -8,7 +8,6 @@
 
 template<class T>
 class Consumer : public Thread, public Conditional {
-
     std::queue<T> pending;
     std::queue<T> proccesing;
 
@@ -21,46 +20,46 @@ public:
     }
 
     void add(T item) {
-        lock();
-        pending.push(item);
-        signal();
-        unlock();
+	lock();
+	pending.push(item);
+	signal();
+	unlock();
     }
 
     void run() {
-        while(running()) {
-            lock();
-            while(pending.empty() && running()) {
-                wait();
-            }
-            while(!pending.empty()) {
-                proccesing.push(pending.front());
-                pending.pop();
-            }
-            unlock();
+	while (running()) {
+	    lock();
+	    while (pending.empty() && running()) {
+		wait();
+	    }
+	    while (!pending.empty()) {
+		proccesing.push(pending.front());
+		pending.pop();
+	    }
+	    unlock();
 
-            while(!proccesing.empty()) {
-                T &item = proccesing.front();
-                proccess(item);
-                proccesing.pop();
-            }
-        }
+	    while (!proccesing.empty()) {
+		T &item = proccesing.front();
+		proccess(item);
+		proccesing.pop();
+	    }
+	}
     }
 
     bool running() {
-        runningLock.lock();
-        bool r = this->r;
-        runningLock.unlock();
-        return r;
+	runningLock.lock();
+	bool r = this->r;
+	runningLock.unlock();
+	return r;
     }
 
     void shutdown() {
-        runningLock.lock();
-        this->r = false;
-        runningLock.unlock();
-        lock();
-        signal();
-        unlock();
+	runningLock.lock();
+	this->r = false;
+	runningLock.unlock();
+	lock();
+	signal();
+	unlock();
     }
 
     virtual void proccess(T &item) = 0;

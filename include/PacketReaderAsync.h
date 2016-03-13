@@ -25,11 +25,11 @@ namespace srv {
 	onErrorListener(0) {
 
 	}
-	
+
 	void setOnErrorListener(OnErrorCallback *onErrorListener) {
 	    this->onErrorListener = onErrorListener;
 	}
-	
+
 	virtual void run() {
 	    while (!interrupted()) {
 		try {
@@ -58,7 +58,7 @@ namespace srv {
 
 	void handleError() {
 	    interrupted(true);
-	    if(onErrorListener != 0) {
+	    if (onErrorListener != 0) {
 		onErrorListener->onError();
 	    }
 	}
@@ -124,14 +124,14 @@ namespace srv {
 	    Log::logMsg("~AsyncPacketReader::readPacketType() readPacketType()");
 	    return (Packet::PacketType)b;
 	}
-	
-    private:	    
-	
+
+    private:
+
 	EventProcessorAsync *asyncEventProcessor;
 	Socket_T *socket;
 	Lockable &readLock;
 	OnErrorCallback *onErrorListener;
-	
+
     };
 }
 

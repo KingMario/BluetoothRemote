@@ -24,7 +24,7 @@ void srv::EventProcessorAsync::process(MouseEventPacket *pkt)
 {
 	Log::logMsg("EventProcessorAsync::process(MouseEventPacket *pkt)");
 	mouse.moveTo(vkm::Point(pkt->x(), pkt->y()));
-	
+
 	switch (pkt->eventType()) {
 	case MouseEventPacket::LEFT_BUTTON:
 		mouse.clickLeft();
@@ -63,7 +63,8 @@ void srv::EventProcessorAsync::process(KeyboardEventPacket *pkt)
 	}
 }
 
-void srv::EventProcessorAsync::process(SingleKeyKeyboardEvent* pkt) {
+void srv::EventProcessorAsync::process(SingleKeyKeyboardEvent* pkt)
+{
 	Log::logMsg("EventProcessorAsync::process(SingleKeyKeyboardEvent* pkt)");
 	keyboard.pressBtn(pkt->key());
 }

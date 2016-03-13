@@ -3,10 +3,9 @@
 
 #include "BluetoothAddress.h"
 
-namespace bluetooth
-{
+namespace bluetooth {
 
-void queryDevices(std::vector<BluetoothAddress> &devices, int max_rsp = 255);
+    void queryDevices(std::vector<BluetoothAddress> &devices, int max_rsp = 255);
 
 }
 

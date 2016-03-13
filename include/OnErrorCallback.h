@@ -4,8 +4,9 @@
 class OnErrorCallback {
 public:
     virtual void onError() = 0;
-    virtual ~OnErrorCallback(){
-	
+
+    virtual ~OnErrorCallback() {
+
     }
 };
 

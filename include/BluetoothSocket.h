@@ -2,31 +2,30 @@
 #define BLUETOOTHSOCKET_H
 
 #include "BluetoothAddress.h"
-namespace bluetooth
-{
-class BluetoothSocket
-{
-    friend class BluetoothServerSocket;
+namespace bluetooth {
 
-    BluetoothAddress addr;
-    int fd;
+    class BluetoothSocket {
+	friend class BluetoothServerSocket;
 
-    // for private use.
-    BluetoothSocket(BluetoothAddress addr, int fd);
+	BluetoothAddress addr;
+	int fd;
 
-public:
-    BluetoothSocket(BluetoothAddress addr);
+	// for private use.
+	BluetoothSocket(BluetoothAddress addr, int fd);
 
-    unsigned char read();
+    public:
+	BluetoothSocket(BluetoothAddress addr);
 
-    int read(size_t numBytes, void *dstBuf);
+	unsigned char read();
 
-    int write(size_t numBytes, const void *srcBuf);
-   
-    virtual ~BluetoothSocket();
+	int read(size_t numBytes, void *dstBuf);
 
-protected:
-private:
-};
+	int write(size_t numBytes, const void *srcBuf);
+
+	virtual ~BluetoothSocket();
+
+    protected:
+    private:
+    };
 }
 #endif // BLUETOOTHSOCKET_H

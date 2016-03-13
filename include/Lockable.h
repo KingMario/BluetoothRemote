@@ -2,15 +2,16 @@
 #define _LOCKABLE_H_
 #include <pthread.h>
 #include "Thread_exception.h"
+
 class Lockable {
-	friend class Conditional;
+    friend class Conditional;
 public:
-	Lockable();
-	virtual ~Lockable();
-	void lock();
-	void unlock();
+    Lockable();
+    virtual ~Lockable();
+    void lock();
+    void unlock();
 private:
-	pthread_mutex_t mux;
+    pthread_mutex_t mux;
 };
 
 #endif

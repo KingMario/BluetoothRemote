@@ -11,7 +11,7 @@ namespace srv {
     public:
 
 	virtual void proccess(InboundPacket*& item);
-	
+
     private:
 
 	vkm::Mouse mouse;

@@ -54,5 +54,5 @@ int main()
 		Log::logMsg("::main() delete socket");
 		delete socket;
 	}
-	
+
 }

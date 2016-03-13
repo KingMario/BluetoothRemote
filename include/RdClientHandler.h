@@ -45,12 +45,14 @@ namespace srv {
 	};
 
 	friend class RdClientHandler<Socket_T*>::SharedContext;
-	
+
 	class OnErrorHandler : public OnErrorCallback, public SharedContext {
 	public:
+
 	    OnErrorHandler(RdClientHandler *context) : SharedContext(context) {
-		
+
 	    }
+
 	    virtual void onError() {
 		Log::logMsg("RdClientHandler<Socket_T*>::OnErrorHandler::onError()");
 		SharedContext::context->wakeUp();
@@ -59,7 +61,7 @@ namespace srv {
 	};
 
     public:
-	
+
 	RdClientHandler(Socket_T *socket) : socket(socket) {
 	    asyncEventProcessor = new EventProcessorAsync;
 	    asyncOutbound = new PacketWriterAsync<Socket_T*>(500, socket, writeLock);
@@ -99,7 +101,7 @@ namespace srv {
 	Socket_T *socket;
 	Lockable readLock;
 	Lockable writeLock;
-	
+
 	OnErrorCallback * onErrorCallback;
 	PacketWriterAsync<Socket_T*> *asyncOutbound;
 	PacketReaderAsync<Socket_T*> *asyncInbound;
