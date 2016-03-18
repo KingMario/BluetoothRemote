@@ -4,6 +4,7 @@
 #include <string.h>
 #include <stdexcept>
 #include <errno.h>
+#include <suinput.h>
 
 void vkm::Keyboard::init()
 {

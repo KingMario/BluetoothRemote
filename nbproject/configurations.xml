@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="97">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <itemPath>include/BluetoothAddress.h</itemPath>
+      <itemPath>include/BluetoothServerSocket.h</itemPath>
+      <itemPath>include/BluetoothSocket.h</itemPath>
+      <itemPath>include/Conditional.h</itemPath>
+      <itemPath>include/Consumer.h</itemPath>
+      <itemPath>include/EventProcessorAsync.h</itemPath>
+      <itemPath>include/Interruptable.h</itemPath>
+      <itemPath>include/Keyboard.h</itemPath>
+      <itemPath>include/Lockable.h</itemPath>
+      <itemPath>include/Mouse.h</itemPath>
+      <itemPath>include/PThreads.h</itemPath>
+      <itemPath>include/Packet.h</itemPath>
+      <itemPath>include/PacketHandler.h</itemPath>
+      <itemPath>include/PacketReaderAsync.h</itemPath>
+      <itemPath>include/PacketWriterAsync.h</itemPath>
+      <itemPath>include/RdClientHandler.h</itemPath>
+      <itemPath>include/Screen.h</itemPath>
+      <itemPath>include/ServiceRegistrer.h</itemPath>
+      <itemPath>include/Thread.h</itemPath>
+      <itemPath>include/Utils.h</itemPath>
+      <itemPath>include/suinput.h</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ResourceFiles"
+                   displayName="Resource Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <itemPath>src/BluetoothServerSocket.cpp</itemPath>
+      <itemPath>src/BluetoothSocket.cpp</itemPath>
+      <itemPath>src/Conditional.cpp</itemPath>
+      <itemPath>src/EventProcessorAsync.cpp</itemPath>
+      <itemPath>src/Keyboard.cpp</itemPath>
+      <itemPath>src/Lockable.cpp</itemPath>
+      <itemPath>src/Mouse.cpp</itemPath>
+      <itemPath>src/PacketHandler.cpp</itemPath>
+      <itemPath>src/PacketReaderAsync.cpp</itemPath>
+      <itemPath>src/Screen.cpp</itemPath>
+      <itemPath>src/ServiceRegistrer.cpp</itemPath>
+      <itemPath>src/Thread.cpp</itemPath>
+      <itemPath>src/Utils.cpp</itemPath>
+      <itemPath>main.cpp</itemPath>
+      <itemPath>src/suinput.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="TestFiles"
+                   displayName="Test Files"
+                   projectFiles="false"
+                   kind="TEST_LOGICAL_FOLDER">
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceRootList>
+    <Elem>src</Elem>
+    <Elem>include</Elem>
+  </sourceRootList>
+  <projectmakefile>Makefile</projectmakefile>
+  <confs>
+    <conf name="Debug" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+        </cTool>
+        <ccTool>
+          <commandlineTool>g++</commandlineTool>
+          <incDir>
+            <pElem>include</pElem>
+          </incDir>
+        </ccTool>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerOptionItem>`pkg-config --libs bluez`</linkerOptionItem>
+            <linkerLibStdlibItem>PosixThreads</linkerLibStdlibItem>
+            <linkerLibLibItem>avcodec</linkerLibLibItem>
+            <linkerLibLibItem>avdevice</linkerLibLibItem>
+            <linkerLibLibItem>avfilter</linkerLibLibItem>
+            <linkerLibLibItem>avformat</linkerLibLibItem>
+            <linkerLibLibItem>avutil</linkerLibLibItem>
+            <linkerLibLibItem>swresample</linkerLibLibItem>
+            <linkerLibLibItem>swscale</linkerLibLibItem>
+            <linkerOptionItem>`pkg-config --libs x11`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs udev`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs libudev`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs cairo`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs cairo-xlib`</linkerOptionItem>
+            <linkerLibFileItem>/usr/lib64/librt.so</linkerLibFileItem>
+          </linkerLibItems>
+        </linkerTool>
+      </compileType>
+      <item path="include/BluetoothAddress.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/BluetoothServerSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/BluetoothSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Conditional.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Consumer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/EventProcessorAsync.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Interruptable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Keyboard.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Lockable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Mouse.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/PThreads.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Packet.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/PacketHandler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/PacketReaderAsync.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/PacketWriterAsync.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/RdClientHandler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Screen.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/ServiceRegistrer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Thread.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Utils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/suinput.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/BluetoothServerSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/BluetoothSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Conditional.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/EventProcessorAsync.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Keyboard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Lockable.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Mouse.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/PacketHandler.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/PacketReaderAsync.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Screen.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ServiceRegistrer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Thread.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Utils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/suinput.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+    <conf name="Release" type="1">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>true</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <compileType>
+        <cTool>
+          <developmentMode>5</developmentMode>
+        </cTool>
+        <ccTool>
+          <developmentMode>5</developmentMode>
+        </ccTool>
+        <fortranCompilerTool>
+          <developmentMode>5</developmentMode>
+        </fortranCompilerTool>
+        <asmTool>
+          <developmentMode>5</developmentMode>
+        </asmTool>
+      </compileType>
+      <item path="include/BluetoothAddress.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/BluetoothServerSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/BluetoothSocket.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Conditional.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Consumer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/EventProcessorAsync.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Interruptable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Keyboard.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Lockable.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Mouse.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/PThreads.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Packet.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/PacketHandler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/PacketReaderAsync.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/PacketWriterAsync.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/RdClientHandler.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Screen.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/ServiceRegistrer.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Thread.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/Utils.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="include/suinput.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="main.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/BluetoothServerSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/BluetoothSocket.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Conditional.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/EventProcessorAsync.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Keyboard.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Lockable.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Mouse.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/PacketHandler.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/PacketReaderAsync.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Screen.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/ServiceRegistrer.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Thread.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/Utils.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="src/suinput.c" ex="false" tool="0" flavor2="0">
+      </item>
+    </conf>
+  </confs>
+</configurationDescriptor>

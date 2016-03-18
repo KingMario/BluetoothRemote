@@ -3,6 +3,7 @@
 #include <cstring>
 #include <X11/Xlib.h>
 #include <unistd.h>
+#include <suinput.h>
 
 vkm::Mouse::Mouse(Screen screen) : scr(screen), uinput_fd(-1)
 {

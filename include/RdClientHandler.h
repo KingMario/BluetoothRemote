@@ -20,6 +20,16 @@ namespace srv {
 		wait();
 	    unlock();
 	}
+        
+        void sleep(uint64 millis) {
+            lock();
+            _sleeping = true;
+            while (_sleeping) {
+                wait(millis);
+                _sleeping = false;
+            }
+            unlock();
+        }
 
 	void wakeUp() {
 	    lock();
@@ -135,23 +145,14 @@ namespace srv {
 
 	void initiateConnection() {
 	    Log::logMsg("RdClientHandler::initiateConnection()");
-	    Packet::PacketType type = readPacketType();
+	    Packet::PacketType type = asyncInbound->readPacketType();
 	    if (type != Packet::CONNECTION_INIT) {
 		throw std::runtime_error("invalid state error");
 	    }
 	    Log::logMsg("RdClientHandler::initiateConnection() ConnectionInitPacket read");
 	    OutbountAckPacket ack;
-	    char acktype = ack.type();
-	    socket->write(1, &acktype);
+	    asyncOutbound->writePacket(&ack);
 	    Log::logMsg("RdClientHandler::initiateConnection() OutbountAckPacket written");
-	}
-
-	Packet::PacketType readPacketType() {
-	    Log::logMsg("RdClientHandler::readPacketType() readPacketType()");
-	    char b;
-	    socket->read(1, &b);
-	    Log::logMsg("~RdClientHandler::readPacketType() readPacketType()");
-	    return (Packet::PacketType)b;
 	}
     };
 }

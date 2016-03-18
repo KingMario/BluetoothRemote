@@ -80,25 +80,37 @@ namespace srv {
 		    Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item) end write");
 		    writeLock.unlock();
 		} catch (const Thread_exception &thrdErr) {
-		    Log::logMsg("AsyncPacketReader::run() error " + std::string(thrdErr.message()));
+		    Log::logMsg("PacketWriterAsync::run() error " + std::string(thrdErr.message()));
 		    handleError();
 		    break;
 		} catch (const std::exception &err) {
-		    Log::logMsg("AsyncPacketReader::run() error " + std::string(err.what()));
+		    Log::logMsg("PacketWriterAsync::run() error " + std::string(err.what()));
 		    writeLock.unlock();
 		    handleError();
 		    break;
 		} catch (...) {
-		    Log::logMsg("AsyncPacketReader::run() unknown error ");
+		    Log::logMsg("PacketWriterAsync::run() unknown error ");
+                    writeLock.unlock();
 		    handleError();
 		    break;
 		}
 		std::ostringstream sstr;
 		sstr << "Sleep " << timerRequest.tv_sec << " " << timerRequest.tv_nsec;
 		Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item) " + sstr.str());
-		nanosleep(&timerRequest, NULL);
+//		nanosleep(&timerRequest, NULL);
 	    }
 	    Log::logMsg("~PacketWriterAsync::proccess(srv::OutboundPacket*& item)");
+	}
+        
+        void writePacket(OutboundPacket *pkt) {
+	    switch (pkt->type()) {
+		case Packet::SCREE_FRAME:
+		    writeScreenFrame(dynamic_cast<ScreenFramePacket*> (pkt));
+		    break;
+		case Packet::ACK:
+		    writeAck(dynamic_cast<OutbountAckPacket*> (pkt));
+		    break;
+	    }
 	}
 
     private:
@@ -107,17 +119,6 @@ namespace srv {
 	    interrupted(true);
 	    if (onErrorListener != 0) {
 		onErrorListener->onError();
-	    }
-	}
-
-	void writePacket(OutboundPacket *pkt) {
-	    switch (pkt->type()) {
-		case Packet::SCREE_FRAME:
-		    writeScreenFrame(dynamic_cast<ScreenFramePacket*> (pkt));
-		    break;
-		case Packet::ACK:
-		    writeAck(dynamic_cast<OutbountAckPacket*> (pkt));
-		    break;
 	    }
 	}
 

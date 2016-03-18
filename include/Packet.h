@@ -1,6 +1,7 @@
 #ifndef PACKET_H
 #define PACKET_H
 #include <iostream>
+#include <vector>
 
 namespace srv {
 

@@ -4,6 +4,7 @@
 #include "Packet.h"
 #include "Mouse.h"
 #include "Keyboard.h"
+#include <stdexcept>
 
 namespace srv {
 

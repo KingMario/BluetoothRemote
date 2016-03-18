@@ -1,4 +1,5 @@
 #include "ServiceRegistrer.h"
+#include <arpa/inet.h>
 
 void bluetooth::ServiceRegistrer::registerService(const ServiceRecord &serviceRecord)
 {

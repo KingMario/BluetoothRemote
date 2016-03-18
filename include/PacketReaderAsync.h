@@ -116,7 +116,9 @@ namespace srv {
 		    throw std::runtime_error("not valid KeyboardEventPacket");
 	    }
 	}
-
+        
+    public:        
+        
 	Packet::PacketType readPacketType() {
 	    Log::logMsg("AsyncPacketReader::readPacketType() readPacketType()");
 	    char b;
