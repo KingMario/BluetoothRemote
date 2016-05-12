@@ -13,39 +13,51 @@
 
 namespace bluetooth {
 
-    class BluetoothServerSocket {
-	int fd;
-	int _port;
+class BluetoothServerSocket {
+  int fd;
+  int _port;
 
-	void construct();
+  void construct();
 
-	BluetoothSocket * _accept();
+  BluetoothSocket * _accept();
 
-	BluetoothServerSocket(const BluetoothServerSocket &o);
+  BluetoothServerSocket(const BluetoothServerSocket &o);
 
-	BluetoothServerSocket& operator=(const BluetoothServerSocket &o);
+  BluetoothServerSocket& operator=(const BluetoothServerSocket &o);
 
-	void _listen(int backlog);
+  void _listen(int backlog);
 
-    public:
-	BluetoothServerSocket(int port);
+public:
+  /**
+   * creates socket and binds it on the specified port
+   * @param port
+   */
+  BluetoothServerSocket(int port);
+  /**
+   * creates socket and binds it on the first available port
+   */
+  BluetoothServerSocket();
 
-	BluetoothServerSocket();
+  virtual ~BluetoothServerSocket();
 
-	virtual ~BluetoothServerSocket();
-
-	int port() const {
-	    return _port;
-	}
-
-	void listen(int backlog = 1) {
-	    _listen(backlog);
-	}
-
-	BluetoothSocket * accept() {
-	    return _accept();
-	}
-    };
+  int port() const {
+    return _port;
+  }
+  /**
+   * Mark the socket as listening
+   * @param backlog how many syns ( tcp term ) can wait before accepted
+   */
+  void listen(int backlog = 1) {
+    _listen(backlog);
+  }
+  /**
+   * The call blocks the current thread until a connection request arrives
+   * @return the client socket
+   */
+  BluetoothSocket * accept() {
+    return _accept();
+  }
+};
 
 }
 

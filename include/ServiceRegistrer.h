@@ -11,94 +11,110 @@
 
 namespace bluetooth {
 
-    struct ServiceRecord {
-	unsigned int uuid[4];
-	std::string serviceName;
-	std::string serviceDesc;
-	std::string serviceProv;
-	unsigned char rfcommChannel;
+/*
+ * Service record that will be built by the user of ServiceRegister class
+ */
+struct ServiceRecord {
+  unsigned int uuid[4];
+  std::string serviceName;
+  std::string serviceDesc;
+  std::string serviceProv;
+  unsigned char rfcommChannel;
 
 #define UUID(a,b,c,d)((const unsigned int[4]){a, b, c, d})
 
-	ServiceRecord(const unsigned int uuid[4], const std::string &serviceName,
-		const std::string &serviceDescription, const std::string &serviceProvider,
-		unsigned char rfcommChannel) :
-	serviceName(serviceName), serviceDesc(serviceDescription),
-	serviceProv(serviceProvider), rfcommChannel(rfcommChannel) {
-	    this->uuid[0] = uuid[0];
-	    this->uuid[1] = uuid[1];
-	    this->uuid[2] = uuid[2];
-	    this->uuid[3] = uuid[3];
-	}
+  ServiceRecord(const unsigned int uuid[4], const std::string &serviceName,
+                const std::string &serviceDescription, const std::string &serviceProvider,
+                unsigned char rfcommChannel) :
+  serviceName(serviceName), serviceDesc(serviceDescription),
+  serviceProv(serviceProvider), rfcommChannel(rfcommChannel) {
+    this->uuid[0] = uuid[0];
+    this->uuid[1] = uuid[1];
+    this->uuid[2] = uuid[2];
+    this->uuid[3] = uuid[3];
+  }
 
-	ServiceRecord(const ServiceRecord &sr) :
-	serviceName(sr.serviceName), serviceDesc(sr.serviceDesc),
-	serviceProv(sr.serviceProv), rfcommChannel(sr.rfcommChannel) {
-	    this->uuid[0] = sr.uuid[0];
-	    this->uuid[1] = sr.uuid[1];
-	    this->uuid[2] = sr.uuid[2];
-	    this->uuid[3] = sr.uuid[3];
-	}
+  ServiceRecord(const ServiceRecord &sr) :
+  serviceName(sr.serviceName), serviceDesc(sr.serviceDesc),
+  serviceProv(sr.serviceProv), rfcommChannel(sr.rfcommChannel) {
+    this->uuid[0] = sr.uuid[0];
+    this->uuid[1] = sr.uuid[1];
+    this->uuid[2] = sr.uuid[2];
+    this->uuid[3] = sr.uuid[3];
+  }
 
-	ServiceRecord& operator=(const ServiceRecord &sr) {
-	    this->uuid[0] = sr.uuid[0];
-	    this->uuid[1] = sr.uuid[1];
-	    this->uuid[2] = sr.uuid[2];
-	    this->uuid[3] = sr.uuid[3];
-	    serviceName = sr.serviceName;
-	    serviceDesc = sr.serviceDesc;
-	    serviceProv = sr.serviceProv;
-	    rfcommChannel = sr.rfcommChannel;
-	    return *this;
-	}
-    };
+  ServiceRecord& operator=(const ServiceRecord &sr) {
+    this->uuid[0] = sr.uuid[0];
+    this->uuid[1] = sr.uuid[1];
+    this->uuid[2] = sr.uuid[2];
+    this->uuid[3] = sr.uuid[3];
+    serviceName = sr.serviceName;
+    serviceDesc = sr.serviceDesc;
+    serviceProv = sr.serviceProv;
+    rfcommChannel = sr.rfcommChannel;
+    return *this;
+  }
+};
 
-    class ServiceRegistrer {
+/*
+ * Singleton class for registering and unregistering bluetooth services
+ * serviceMap Contains the Bluetooth services registered so far 
+ * uuid_struct contains the service 128 bit identifier used in 
+ * the bluetooth service discovery protocol
+ */
 
-	struct uuid_struct {
-	    int a, b, c, d;
+class ServiceRegistrer {
 
-	    friend bool operator<(const uuid_struct &a, const uuid_struct &b) {
-		return a.a < b.a ||
-			a.b < b.b ||
-			a.c < b.c ||
-			a.d < b.d;
-	    }
-	};
+  struct uuid_struct {
+    unsigned int a, b, c, d;
 
-	std::map<uuid_struct, sdp_record_t *> serviceMap;
+    friend bool operator<(const uuid_struct &a, const uuid_struct &b) {
+      return a.a < b.a ||
+              a.b < b.b ||
+              a.c < b.c ||
+              a.d < b.d;
+    }
+  };
 
-	sdp_session_t * session;
+  std::map<uuid_struct, sdp_record_t *> serviceMap;
 
-	sdp_record_t * registerRecord(const ServiceRecord &serviceRecord);
+  sdp_session_t * session;
 
-	static uuid_struct toUUIDStruct(const unsigned int uuid[4]) {
-	    uuid_struct uuidKey;
-	    uuidKey.a = uuid[0];
-	    uuidKey.b = uuid[1];
-	    uuidKey.c = uuid[2];
-	    uuidKey.d = uuid[3];
-	    return uuidKey;
-	}
+  sdp_record_t * registerRecord(const ServiceRecord &serviceRecord);
 
-	ServiceRegistrer() : session(0) {
+  /**
+   * the function is rarely used so the overhead of return by value
+   * is not be significant
+   * 
+   * @param uuid 128bit value to be converted 
+   * @return converted value
+   */
+  static uuid_struct toUUIDStruct(const unsigned int uuid[4]) {
+    uuid_struct uuidKey;
+    uuidKey.a = uuid[0];
+    uuidKey.b = uuid[1];
+    uuidKey.c = uuid[2];
+    uuidKey.d = uuid[3];
+    return uuidKey;
+  }
 
-	}
+  ServiceRegistrer() : session(0) {
+  }
 
-	~ServiceRegistrer();
+  ~ServiceRegistrer();
 
-	static ServiceRegistrer& getInstance() {
-	    static ServiceRegistrer sr;
+  static ServiceRegistrer& getInstance() {
+    static ServiceRegistrer sr;
 
-	    return sr;
-	}
+    return sr;
+  }
 
-    public:
+public:
 
-	static void registerService(const ServiceRecord &serviceRecord);
+  static void registerService(const ServiceRecord &serviceRecord);
 
-	static void unregisterService(const ServiceRecord &serviceRecord);
-    };
+  static void unregisterService(const ServiceRecord &serviceRecord);
+};
 
 
 }

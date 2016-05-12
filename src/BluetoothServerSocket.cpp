@@ -2,7 +2,11 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <iostream>
-
+/**
+ * Creates socket fd and binds it to 
+ *  specific port if _port specified 
+ *  otherwise the first available port
+ */
 void bluetooth::BluetoothServerSocket::construct()
 {
 	fd = socket(AF_BLUETOOTH, SOCK_STREAM, BTPROTO_RFCOMM);
@@ -50,6 +54,10 @@ bluetooth::BluetoothSocket * bluetooth::BluetoothServerSocket::_accept()
 	return clientSocket;
 }
 
+/**
+ * dup() should be used on o.fd here if exposed
+ * @param o
+ */
 bluetooth::BluetoothServerSocket::
 BluetoothServerSocket(const BluetoothServerSocket &o) :
 fd(o.fd), _port(o._port)
@@ -57,6 +65,11 @@ fd(o.fd), _port(o._port)
 
 }
 
+/**
+ * same as copy constructor
+ * @param o
+ * @return 
+ */
 bluetooth::BluetoothServerSocket& bluetooth::
 		BluetoothServerSocket::operator=(const BluetoothServerSocket &o)
 {

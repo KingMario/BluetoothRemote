@@ -4,28 +4,31 @@
 #include "BluetoothAddress.h"
 namespace bluetooth {
 
-    class BluetoothSocket {
-	friend class BluetoothServerSocket;
+class BluetoothSocket {
+  
+  friend class BluetoothServerSocket;
 
-	BluetoothAddress addr;
-	int fd;
+  BluetoothAddress addr;
+  int fd;
 
-	// for private use.
-	BluetoothSocket(BluetoothAddress addr, int fd);
+  BluetoothSocket(BluetoothAddress addr, int fd);
 
-    public:
-	BluetoothSocket(BluetoothAddress addr);
+public:
+  BluetoothSocket(BluetoothAddress addr);
 
-	unsigned char read();
+  unsigned char read();
 
-	int read(size_t numBytes, void *dstBuf);
+  int read(size_t numBytes, void *dstBuf);
 
-	int write(size_t numBytes, const void *srcBuf);
+  int write(size_t numBytes, const void *srcBuf);
 
-	virtual ~BluetoothSocket();
+  virtual ~BluetoothSocket();
 
-    protected:
-    private:
-    };
+protected:
+  BluetoothSocket& operator=(const BluetoothSocket &o) {
+    
+  }
+private:
+};
 }
 #endif // BLUETOOTHSOCKET_H
